@@ -1,0 +1,103 @@
+<div class="days-page">
+    <div class="page-header">
+        <div class="page-title"> days </div>
+        <div class="page-info"> {{days.length}} </div>
+    </div>
+    <div class="page-content" *ngIf="!loaderOn">
+        <div class="page-controls">
+            <div (click)="addDay()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Day </p>
+            </div>
+            <div class="page-controls-filters">
+                <!--<input [(ngModel)]="daysFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">-->
+            </div>
+        </div>
+        <div class="editable-table days-table">
+            <table>
+                <tr class="editable-table-titles">
+                    <th class="edit-header"></th>
+                    <th class="day-description">Title</th>
+                    <th class="day-site-key">Sites Number</th>
+                </tr>
+                <tr *ngFor="let day of days | async" class="editable-row day" [ngClass]="{ selectedDay: selectedDayKey == day.key }"
+                    (click)="selectDay(day)">
+                    <td class="day-edit" (click)="editDay(day)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                    </td>
+                    <td class="day-description">{{day.description}}</td>
+                    <td class="day-site-key">{{ day.siteKeys ? day.siteKeys.length : 0 }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="center-wrap">
+            <div (click)="addSite()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Site </p>
+            </div>
+            <div class="wrapper">
+                <div class="draggable-header">Day Sites</div>
+                <div class="nondraggable-container">
+                    <div class='container'>
+                        <div *ngFor="let site of loadedDaySites" >
+                            <span class="text-draggable">{{site.name + ' - ' + site.description}}</span>
+                            <span class="fa fa-times delete" (click)="removeSite(site)"> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loader" *ngIf="loaderOn">
+        <loader-component ></loader-component>
+    </div>
+    <p-dialog class="dialog-container" [(visible)]="dialogVisable" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitch' class="title"> Add Day</div>
+            <div *ngIf='!titleSwitch' class="title"> Edit Day</div>
+            <div class="dialog-close-icon" (click)="hideDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableDay.description" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Description</label>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="removeDay()">Delete</div>
+            <div class="square-button" (click)="saveDay()">save</div>
+        </footer>
+    </p-dialog>
+    <p-dialog class="dialog-container" [(visible)]="chooseSitesVisible" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header border-top-blue">
+            <div class="title"> Choose Your Sites</div>
+            <div class="dialog-close-icon" (click)="hideAvaiableSites()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="wrapper">
+            <div class="nondraggable-container selectable">
+                <div class='container'>
+                    <div *ngFor="let site of availableSites" (click)='addThisSiteToSelected(site)' [ngClass]="{'toggle-selected': site.selected }" >{{ site.site.name }}</div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="saveSiteSelection()">Save selected</div>
+        </footer>
+    </p-dialog>
+    <p-growl [value]="msgs"></p-growl>
+</div>

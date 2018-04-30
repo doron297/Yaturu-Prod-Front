@@ -1,0 +1,13 @@
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+
+.tourists-page{
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+}

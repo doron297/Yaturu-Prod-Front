@@ -1,0 +1,114 @@
+// styles applied on :host are applied on the current component, "app" in this case
+@import '../style/variables.scss';
+
+:host {
+  display: block;
+}
+
+header {
+  height: $headerHeight;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-width: $appMinWidth;
+  background-color:$headerColor;
+  color: $headerTextColor;
+  justify-content: space-between;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items:center;
+  user-select: none;
+  .complex-selector{
+    padding-left: 5px;
+  }
+  .header-container-left,.header-container-right{
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items:center;
+    .stab-icon{
+      width:25px;
+      height:25px;
+      margin:12px;
+      background-color: white;
+    }
+    .logo{
+      img{
+        width: 150px;
+        margin-top: 22px;
+        margin-left: -50px;
+      }
+    }
+    .logout{
+      padding-right: 50px;
+      &:hover{
+        color: #149bdf;
+      }
+      cursor: pointer;
+    }
+  }
+  .header-container-left{
+    justify-content: flex-start;
+    padding-left: 20px;
+  }
+  .header-container-right{
+    justify-content: flex-end;
+  }
+}
+
+.side-menu{
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75em;
+  left: 0px;
+  height: 100%;
+  min-height: 525px;
+  width: $sidemenuWidth;
+  color:$sidemenuTextColor;
+  background-color: $sidemenuBackgroundColor;
+  user-select: none;
+  .menu-icon{
+    color:$sidemenuTextColor;
+    font-size: 2.5em;
+  }
+  .active-page{
+    color: $sidemenuBackgroundColor;
+    background-color: $highlightColor;
+    &:hover{
+      background-color: darken($highlightColor,5%) !important;
+    }
+    .menu-icon{
+      color: $sidemenuBackgroundColor;
+    }
+  }
+  .menu-item{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    font-weight: bold;
+    cursor:pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1px $sidemenuSeparatorColor;
+  }
+  .menu-item:hover{
+    background-color: darken($sidemenuBackgroundColor, 5%);
+  }
+}
+
+main {
+  text-align: center;
+  margin-top: $headerHeight;
+  display: flex;
+  .router-container{
+    width: 100%;
+    padding-left: $sidemenuWidth;
+  }
+}
+
+footer {
+  text-align: center;
+  font-size: 0.8em;
+}

@@ -1,0 +1,154 @@
+<div class="guides-page">
+    <div class="page-header">
+        <div class="page-title"> guides </div>
+        <div class="page-info"> {{guides.length | async}}</div>
+    </div>
+    <div class="page-content" *ngIf="!loaderOn">
+        <div class="page-controls">
+            <div (click)="addGuide()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add guide </p>
+            </div>
+            <div class="page-controls-filters">
+                <input [(ngModel)]="guideFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">
+            </div>
+        </div>
+        <div class="editable-table guides-table">
+            <table>
+                <tr class="editable-table-titles">
+                    <th class="edit-header"></th>
+                    <th class="guide-displayName"> Display Name </th>
+                    <th class="guide-firstName">First Name</th>
+                    <th class="guide-lastName">last Name</th>
+                    <th class="guide-phoneNumber">Phone-Number</th>
+                    <th class="guide-email">Email</th>
+                    <th class="guide-image">Image Url</th>
+                </tr>
+                <tr *ngFor="let guide of guides | async" class="editable-row guide">
+                    <td class="guide-edit" (click)="editGuide(guide)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                    </td>
+                    <td class="guide-displayName"> {{guide.displayName}} </td>
+                    <td class="guide-firstName">{{guide.firstName}}</td>
+                    <td class="guide-lastName">{{guide.lastName}}</td>
+                    <td class="guide-phoneNumber">{{guide.phoneNumber}}</td>
+                    <td class="guide-email">{{guide.email}}</td>
+                    <td class="guide-image">
+                        <img src="{{guide.imageUrl}}" class="button-td" height="42" width="42" (click)="showImagePreview(guide)">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="loader" *ngIf="loaderOn">
+        <loader-component></loader-component>
+    </div>
+
+    <p-dialog class="dialog-container" [(visible)]="dialogVisable" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitch' class="title"> Add guide</div>
+            <div *ngIf='!titleSwitch' class="title"> Edit guide</div>
+            <div class="dialog-close-icon" (click)="hideDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableGuide.firstName" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>First Name</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableGuide.lastName" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Last Name</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableGuide.displayName" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Display Name</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableGuide.imageUrl" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Image Url</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableGuide.phoneNumber" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Phone-Number</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableGuide.email" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Email</label>
+                </div>
+            </div>
+            <div *ngIf="newGuide" class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="newGuidePassword" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Password</label>
+                </div>
+            </div>
+
+
+            <div class="contain-upload">
+                <form [hidden]='!showUpload' class="upload_form">
+                </form>
+
+                <div *ngIf="!showUpload">
+                    <button *ngIf="!uploadDone" class="cancelButton" (click)="cancelUploadfunction()"> Cancel Upload</button>
+                    <button *ngIf="uploadDone" class="removeButton" (click)="removeUploadfunction()" style="disabled:disabled;"> Remove Upload </button>
+                    <div class="contain_progress">
+                        <div class="progress_bar" style="width:100%">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="removeGuide()">Delete</div>
+            <div class="square-button" (click)="saveGuide()">save</div>
+            <div *ngIf="!newGuide" class="row">
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" [(ngModel)]="newPassword" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>New Password</label>
+                    </div>
+                </div>
+                <div class="reset" (click)="resetPassword()">Update passwoerd</div>
+            </div>
+        </footer>
+    </p-dialog>
+    <p-dialog class="dialog-container" [(visible)]="imagePreviewVisible" [closable]="true" modal="modal" showEffect="fade" [resizable]="false">
+        <div class="dialog-content-preview">
+            <img src="{{editableGuide.imageUrl}}" height="300" width="300">
+        </div>
+    </p-dialog>
+    <p-growl [value]="msgs"></p-growl>
+</div>

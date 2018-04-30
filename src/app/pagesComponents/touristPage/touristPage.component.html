@@ -1,0 +1,91 @@
+<div class="tourists-page">
+    <div class="page-header">
+        <div class="page-title"> Tourists - {{tripName}}
+        </div>
+        <div class="page-info"> {{ tourists.length | async }} tourists</div>
+    </div>
+    <div class="page-content">
+        <div class="page-controls">
+            <div (click)="addTourist()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add tourist </p>
+            </div>
+            <!--<div class="page-controls-filters">
+                <input [(ngModel)]="touristFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">
+            </div>-->
+        </div>
+        <div class="editable-table tourists-table">
+            <table>
+                <tr class="editable-table-titles">
+                    <th class="edit-header"></th>
+                    <th class="tourist-firstName"> firstName </th>
+                    <th class="tourist-lastName">lastName</th>
+                    <th class="tourist-email"> email </th>
+                    <th class="phoneNumber-image">phoneNumber</th>
+                </tr>
+                <tr *ngFor="let tourist of (tourists | async).get(tripKey)" class="editable-row tourist">
+                    <td class="tourist-edit" (click)="editTourist(tourist)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                    </td>
+                    <td class="tourist-firstName"> {{tourist.firstName}} </td>
+                    <td class="tourist-lastName"> {{tourist.lastName}} </td>
+                    <td class="tourist-email"> {{tourist.email}} </td>
+                    <td class="tourist-phoneNumber"> {{tourist.phoneNumber}} </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <p-dialog class="dialog-container" [(visible)]="dialogVisable" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitch' class="title"> Add Tourist</div>
+            <div *ngIf='!titleSwitch' class="title"> Edit Tourist</div>
+            <div class="dialog-close-icon" (click)="hideDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableTourist.firstName" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>firstName</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableTourist.lastName" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>lastName</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableTourist.email" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>email</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableTourist.phoneNumber" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>phoneNumber</label>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="removeTourist()">Delete</div>
+            <div class="square-button" (click)="saveTourist()">save</div>
+        </footer>
+    </p-dialog>
+    <p-growl [value]="msgs"></p-growl>
+</div>

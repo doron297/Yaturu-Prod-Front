@@ -1,0 +1,64 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+
+.sites-page{
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+    .content-textarea {
+        margin-top: 25px;
+        width: 100%;
+        text-align: left;
+    }
+    .content-selection-input{
+        width: 100%;
+        text-align: left;
+    }
+    .region-content{
+        text-align: left;
+        margin-top: -40px;
+    }
+    .preview-img{
+        img{
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            max-height: 350px;
+            max-width: 500px;
+        }
+        min-height: 300px;
+    }
+    .contain_progress{  
+        display:flex;
+        justify-content: center;
+        .progress_bar{
+
+            width: 80%;
+            background-color: #ebebeb;
+            height: 30px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: 0.5px solid grey;
+
+            .bar{
+                background-color: #149bdf;
+                height: 30px;
+                border-radius: 5px;
+                width: 0%;
+            }
+        }
+    }
+}
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
+}

@@ -1,0 +1,254 @@
+<div class="content-page">
+    <div class="page-header">
+        <div class="page-title"> content </div>
+        <div class="page-info">
+        </div>
+    </div>
+    <div class="page-content" *ngIf="!loaderOn">
+        <div class="page-controls">
+            <div (click)="addContent()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Content </p>
+            </div>
+            <div (click)="addQuestion()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Question </p>
+            </div>
+            <div class="page-controls-filters">
+                <input [(ngModel)]="contentFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">
+            </div>
+        </div>
+
+        <div class="editable-table content-table">
+            <table>
+                <tr class="editable-table-titles">
+                    <th class="edit-header"></th>
+                    <th class="content-name"> name </th>
+                    <th class="content-trackNumber">trackNumber</th>
+                    <th class="content-contentType">contentType</th>
+                    <th class="content-duration">duration</th>
+                    <th class="content-duration">Preview</th>
+                </tr>
+                <tr *ngFor="let item of content | async" class="editable-row content">
+                    <td *ngIf="item.contentType != 'question'" class="content-edit" (click)="editContent(item)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                    </td>
+                    <td *ngIf="item.contentType == 'question'" class="content-edit" (click)="viewQuestion(item)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                    </td>
+                    <td class="content-name"> {{item.name}} </td>
+                    <td class="content-trackNumber">{{item.trackNumber}}</td>
+                    <td class="content-contentType">{{item.contentType}}</td>
+                    <td class="content-duration">{{item.duration | duration }} </td>
+                    <td class="content-preview">
+                        <img *ngIf="item.contentType == 'image' || item.contentType == 'cupon' || item.contentType == 'video' || 
+                        (item.contentType == 'audio' && item.thumbnailUrl)" class="button-td" src="{{item.thumbnailUrl}}"
+                            alt="Smiley face" height="42" width="42" (click)="viewContent(item)">
+                        <i *ngIf="item.contentType == 'audio' && !item.thumbnailUrl" class="fa fa-file-audio-o button-td" aria-hidden="true" (click)="viewContent(item)"></i>
+                        <div *ngIf="item.contentType == 'question'" (click)="viewQuestion(item)" class="button-td">View Question</div>
+                        <div *ngIf="item.contentType == 'text'" (click)="viewContent(item)" class="button-td">View Text</div>
+                    </td>
+                    <td class="content-duration"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="loader" *ngIf="loaderOn">
+        <loader-component></loader-component>
+    </div>
+    <p-dialog class="dialog-container" [(visible)]="dialogVisable" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitchContent' class="title"> Add Content</div>
+            <div *ngIf='!titleSwitchContent' class="title"> Edit Content</div>
+            <div class="dialog-close-icon" (click)="hideDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableContent.name" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Name</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input id="urlInput" type="text" [(ngModel)]="editableContent.url" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label *ngIf="selectedContent !== 'ar_application'">Url</label>
+                    <label *ngIf="selectedContent === 'ar_application'">Package Name</label>
+                </div>
+            </div>
+
+            <p-dropdown [options]="contentTypes" [(ngModel)]="selectedContent" [style]="{'width':'180px'}"></p-dropdown>
+
+            <div class="material-input" *ngIf="selectedContent !== 'ar_application'">
+                <div class="group">
+                    <input id="durationInput" type="text" [(ngModel)]="editableContent.duration" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Duration</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input id="thumbnailInput" type="text" [(ngModel)]="editableContent.thumbnailUrl" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Thumbnail</label>
+                </div>
+            </div>
+        </div>
+        <div [hidden]='(!selectedContent) || (selectedContent === "text")' class="upload-div">
+            <form [hidden]="!showUpload || selectedContent === 'ar_application'" class="upload_form">
+            </form>
+
+            <label *ngIf="(selectedContent === 'audio' || selectedContent === 'ar_application') && showUploadImage" for="" class="label"> Image:
+                <span *ngIf="selectedContent !== 'ar_application'"> (Please upload audio first) </span></label>
+            <form [hidden]="(selectedContent !== 'audio' && selectedContent !== 'ar_application') || !showUploadImage" class="upload_image">
+            </form>
+
+            <div *ngIf="!showUpload">
+                <button *ngIf="!uploadDone" class="cancelButton" (click)="cancelUploadfunction()"> Cancel Upload</button>
+                <button *ngIf="uploadDone" class="removeButton" (click)="removeUploadfunction()" style="disabled:disabled;"> Remove Upload </button>
+                <div class="contain_progress">
+                    <div class="progress_bar" style="width:100%">
+                        <div class="bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf='selectedContent === "text"' class="text-div">
+            Insert Textual Content
+            <textarea cols="30" rows="10" [(ngModel)]="editableContent.description"></textarea>
+        </div>
+        <footer>
+            <div class="square-button" [class.disable-button]="!selectedContent" (click)="removeContent()">Delete</div>
+            <div class="square-button" [class.disable-button]="!selectedContent" (click)="saveContent()">save</div>
+        </footer>
+    </p-dialog>
+    <p-dialog class="dialog-container" [(visible)]="lightboxVisible" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div class="title"> Content Preview </div>
+            <div class="dialog-close-icon" (click)="hidePreviewDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content-preview">
+            <div *ngIf="editableContent.contentType == 'image' || editableContent.contentType == 'cupon' ">
+                <div class="preview-img">
+                    <img src="{{editableContent.url}}">
+                </div>
+            </div>
+            <div *ngIf="editableContent.contentType == 'audio' ">
+                <audio controls>
+                    <source src="{{editableContent.url}}" type="audio/mpeg">
+                </audio>
+                <div class="preview-img">
+                    <img src="{{editableContent.thumbnailUrl}}">
+                </div>
+            </div>
+            <div *ngIf="editableContent.contentType == 'video' ">
+                <div style="height:315px;">
+                    <video width="560" height="315" frameborder="0" controls autoplay>
+                        <source src="{{editableContent.url}}">
+                    </video>
+                </div>
+            </div>
+            <div *ngIf="editableContent.contentType == 'text' ">
+                {{editableContent.description}}
+            </div>
+        </div>
+    </p-dialog>
+
+    <p-dialog class="dialog-container" [(visible)]="questionBoxVisible" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitchQuestion' class="title"> Add Question</div>
+            <div *ngIf='!titleSwitchQuestion' class="title"> Edit Question</div>
+            <div class="dialog-close-icon" (click)="hideQuestion()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="material-input">
+                <div class="group">
+                    <input *ngIf="editableContent.question" type="text" [(ngModel)]="editableContent.name" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Question</label>
+                </div>
+            </div>
+            <br/>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.duration" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Duration</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[0]" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Answer1</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[1]" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Answer2</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[2]" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Answer3</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[4]" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Answer4</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.correctAnswer" required>
+                    <input type="text" *ngIf="!editableContent.question" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Right Answer</label>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="saveContent()">save</div>
+            <div class="square-button" (click)="removeContent()">Delete</div>
+        </footer>
+    </p-dialog>
+</div>
+<p-growl [value]="msgs"></p-growl>

@@ -1,0 +1,85 @@
+@import './mixins.scss';  
+
+@mixin ngPrimePickList(){
+  .ui-picklist{
+    .ui-picklist-source-controls{
+      display: none;
+    }
+    .ui-picklist-buttons-cell{
+      button[icon=fa-angle-double-right],button[icon=fa-angle-double-left]{
+        display: none;
+      }
+    }
+  }
+}
+
+@mixin growlTheming(){
+  .ui-growl-item-container.ui-state-highlight.ui-corner-all.ui-shadow.ui-growl-message-info{
+    .ui-growl-item{
+      background-color: #4CAF50;
+      border-color: #4CAF50;
+    }
+  } 
+  .ui-growl-item-container.ui-state-highlight.ui-corner-all.ui-shadow.ui-growl-message-error{
+    .ui-growl-item{
+      background-color: #f44336;
+      border-color: #f44336;
+    }
+  }
+}
+@mixin ngPrimeDialogModal(){
+  .ui-dialog-title{
+    color: $headerColor;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.9em !important;
+    margin: 0 !important;
+    float: none !important;
+  }
+  .ui-widget-content{
+    border-radius: 0px !important;
+  }
+  .dialog-header{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding-top: 10px;
+  }
+  .dialog-close-icon{
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin-top: -5px;
+    color: $inputTextColor;
+  }
+  .ui-dialog{
+    width: 600px !important;
+  }
+}
+@mixin ngPrimemMltiSelect(){
+  .ui-multiselect-panel{
+    .ui-widget-header{
+      .ui-chkbox{
+        display: none;
+      }
+    }
+  }
+}
+@mixin selectFix(){
+  .ui-multiselect .ui-multiselect-label{
+    height: 30px !important;
+  }
+}
+@mixin smallScreenFixMultiSelect(){
+  .ui-multiselect-panel .ui-multiselect-items-wrapper {
+      max-height: 100px;
+  }
+}
+@mixin ngPrimeSkin(){
+    @include growlTheming();
+    @include smallScreenFixMultiSelect();
+    @include selectFix();
+    @include ngPrimemMltiSelect();
+    @include ngPrimeDialogModal();
+    @include ngPrimePickList();
+}

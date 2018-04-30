@@ -1,0 +1,88 @@
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+
+.content-page{
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+  .text-div{
+    text-align: left;
+  }
+  .content-counter{
+    display: inline;
+    font-weight: 800;
+    padding-left: 20px;
+  }
+  .page-content-toSelect{
+      max-height: 28vh;
+      overflow: auto;
+
+  }
+  .content-divider{
+    height: 30px;
+    width: 100%;
+    background-color: #f5f1ee;
+    border-bottom: 3px #68c3f1 solid;
+  }
+  .content-divider.no-bottom{
+    background-color: #f5f1ee;
+    border-bottom: none;
+  }
+  .page-content-toUpdate{
+      max-height: 28vh;
+      overflow: auto;
+  }
+  .page-controls{
+      margin-top: 10px;
+      margin-right: 5px;
+      margin-bottom: 10px;
+  }
+  .content-add, .content-remove{
+    i{
+        color:#68c3f1;
+        &:hover{
+            color:#149bdf;
+            cursor: pointer;
+        }
+    }
+  }
+  .content-add, .content-remove{
+    text-align: center !important;
+    width: 50px;
+  }
+}
+.wrap-content  {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.flex-it{
+    width: 100%;
+}
+.content-preview{
+    display: flex;
+    justify-content: center;
+    i {
+      font-size: 20px;
+    }
+}
+@include contain_progress();
+.preview-img{
+  img{
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      max-height: 350px;
+      max-width: 500px;
+  }
+}
+.dialog-content-preview{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 300px;
+}

@@ -1,0 +1,60 @@
+<header>
+  <div class="header-container-left">
+    <div class="logo"><img src="./img/logo_white__1_.png" alt=""></div>
+    <div class="complex-selector">Yaturu Management Dashboard </div>
+  </div>
+  <div class="header-container-right">
+    <div class="logout" (click)='logout()'> Logout</div>
+  </div>
+</header>
+<main>
+  <div class="side-menu">
+     <div class="menu-item" [routerLink]="['trips']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-map-signs" aria-hidden="true"></i>
+      </div>
+      Trips
+    </div>
+    <div class="menu-item" [routerLink]="['days']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+      </div>
+      Days
+    </div>
+    <div class="menu-item" [routerLink]="['sites']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+      </div>
+      Sites
+    </div>
+    <div class="menu-item" [routerLink]="['content']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-file-image-o" aria-hidden="true"></i>
+      </div>
+      Content
+    </div>
+    <div class="menu-item" [routerLink]="['regions']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-globe" aria-hidden="true"></i>
+      </div>
+      Region
+    </div>
+    <div class="menu-item" [routerLink]="['guides']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-blind" aria-hidden="true"></i>
+      </div>
+      Guides
+    </div>
+    <!--<div class="menu-item" [routerLink]="['tourists']" [routerLinkActive]="['active-page']">
+      <div class="menu-icon">
+        <i class="fa fa-address-book" aria-hidden="true"></i>
+      </div>
+      Tourists
+    </div>-->
+  </div>
+  <div class="router-container">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+<footer>
+</footer>

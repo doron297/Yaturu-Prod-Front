@@ -1,0 +1,29 @@
+<div class="login-page">
+    <div class="page-header">
+        <div class="page-title"> login </div>
+        <div class="page-info"> 212 login</div>
+    </div>
+    <h1>login</h1>
+    <div class="form-container">
+        <div class="login-form">
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="username" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>username</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="password" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>password</label>
+                </div>
+            </div>
+            <div class="square-button" (click)="login()">Login</div>
+        </div>
+    </div>
+    <p-growl [value]="msgs"></p-growl>
+</div>

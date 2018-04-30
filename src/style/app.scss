@@ -1,0 +1,16 @@
+// styles in src/style directory are applied to the whole page
+@import './variables.scss';
+@import './mixins.scss';
+@import './ngPrimeSkin.scss';
+html,body {
+    margin: 0;
+    padding: 0;
+    background-color: $backgroundColor;
+    font-family: 'Open Sans', sans-serif;
+}
+app200-app{
+    min-width: $appMinWidth;
+}
+
+
+@include ngPrimeSkin();

@@ -1,0 +1,33 @@
+@import '../../style/variables.scss';
+
+@mixin editableTable(){
+    .editable-table-titles{
+        text-align: left;
+        padding-bottom: 10px;
+        font-size: 0.75em;
+        font-weight: 600;
+        text-transform: uppercase;
+        color:$semiTitleColor;
+    }
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+    }
+        tr:nth-of-type(even) { 
+        background: darken($pageBackgroundColor,2); 
+    }
+        td, th { 
+        padding: 6px; 
+        text-align: left; 
+    }
+    .button-td{
+        background-color: #68c3f1;
+        border-radius: 2px;
+        text-align: center;
+        padding: 5px;
+        color: #fafafa;
+        border-bottom: solid 3px #51b2e3;
+        cursor: pointer;
+        text-decoration: none;
+    }
+}

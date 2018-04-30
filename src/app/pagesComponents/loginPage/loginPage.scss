@@ -1,0 +1,27 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+
+.login-page{
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+  h1{
+    padding: 50px;
+    margin: 0;
+  }
+  .form-container{
+    display: flex;
+    justify-content: center;
+    .login-form{
+      width:250px;
+      padding-bottom: 150px;
+    }
+  }
+}

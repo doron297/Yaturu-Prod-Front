@@ -1,0 +1,170 @@
+<div class="trips-page">
+    <div class="page-header">
+        <div class="page-title"> trips </div>
+    </div>
+    <div class="page-content" *ngIf="!loaderOn">
+        <div class="page-controls">
+            <div (click)="addTrip()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Trip </p>
+            </div>
+            <div class="page-controls-filters">
+                <input [(ngModel)]="tripsFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">
+            </div>
+        </div>
+        <div #toScroll class="editable-table trips-table">
+            <table>
+                <tbody #toObserve class="zebe">
+                    <tr class="editable-table-titles">
+                        <th class="edit-header"></th>
+                        <th class="trip-name"> Title </th>
+                        <th class="trip-description">Description</th>
+                        <th class="trip-name"> Guide </th>
+                        <th class="trip-startDate">Start Date</th>
+                        <th class="trip-tourists">Tourists</th>
+                    </tr>
+                    <tr *ngFor="let trip of trips | async" class="editable-row trip" [ngClass]="{selectedTrip: selectedTripKey == trip.key}"
+                        (click)="selectTrip(trip)">
+                        <td class="trip-edit" (click)="editTrip(trip)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                        </td>
+                        <td class="trip-name"> {{trip.name}} </td>
+                        <td class="trip-description">{{trip.description}}</td>
+                        <td class="trip-description">{{ trip.guideKey ? returnGuideName(trip.guideKey) : 'None'}} </td>
+                        <td class="trip-startDate">{{trip.startDate | date}}</td>
+                        <td class="trip-tourists" (click)="showTourists(trip.key, trip.name)">
+                            <div class="button-td">
+                                {{(touristMap | async).get(trip.key)? (touristMap | async).get(trip.key).length : 0}}
+                            </div>
+                        </td>
+                        <td class="trip-tourists">
+                            <a id="download" class="button-td" [href]="csvUrl" (click)="getUrl(trip.key)"
+                                target="_blank" > Download trip</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="center-wrap">
+            <div (click)="showAvailableDays()" class="left-icon">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Days </p>
+            </div>
+            <div class='wrapper'>
+                <div class="contain-draggable">
+                    <div class="draggable-header">Trip Schedule</div>
+                    <div class="draggable-container">
+                        <div class='container' [dragula]='"first-bag"' [dragulaModel]='selectedDays'>
+                            <div *ngFor="let day of selectedDays" (click)="loadSites(day)">
+                                <span class="handle fa fa-ellipsis-v"> </span>
+                                <span class="text-draggable">{{ day.description }}</span>
+                                <span class="fa fa-times delete-draggable" (click)="removeDay(day)"> </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nondraggable-container">
+                    <div class="draggable-header">Day Sites</div>
+                    <div class='container'>
+                        <div *ngFor="let site of loadedDaySites">{{ site.name }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selectedTripKey" class="square-button save-cahnges" (click)="saveDays()">save changes</div>
+    </div>
+    <div class="loader" *ngIf="loaderOn">
+        <loader-component></loader-component>
+    </div>
+    <p-dialog class="dialog-container" [(visible)]="tripDialogVisable" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitch' class="title"> Add trip</div>
+            <div *ngIf='!titleSwitch' class="title"> Edit trip</div>
+            <div class="dialog-close-icon" (click)="hideDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableTrip.name" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Title</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableTrip.description" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Description</label>
+                </div>
+            </div>
+            <div class="date-input">
+                <h5>Start Date</h5>
+                <p-calendar [(ngModel)]="displayDate"></p-calendar>
+            </div>
+
+        </div>
+        <p-dropdown [options]="availableGuides" [(ngModel)]="editableTrip.guideKey" [style]="{'position': 'fixed', 'margin-top': '-20px', 'margin-left': '-90px', 'width': '150px'}"></p-dropdown>
+        <footer>
+            <div class="square-button" (click)="removeTrip()">Delete</div>
+            <div class="square-button" (click)="saveTrip(true)">save</div>
+        </footer>
+    </p-dialog>
+    <p-dialog class="dialog-container" [(visible)]="chooseDaysVisible" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header border-top-blue">
+            <div class="title"> Select your days </div>
+            <div class="dialog-close-icon" (click)="hideAvaiableDays()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="wrapper">
+            <div class="nondraggable-container selectable">
+                <div class='container'>
+                    <div *ngFor="let day of avalibleDays" (click)='addThisDayToSelected(day)' [ngClass]="{'my-class': day.selected }">{{day.day.description}}</div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="saveDaySelection()">Save selected</div>
+        </footer>
+    </p-dialog>
+    <p-dialog class="dialog-container" [(visible)]="displayTouristsVisible" [closable]="false" modal="modal" showEffect="fade"
+        [resizable]="false" [draggable]="false">
+        <header class="dialog-header border-top-blue">
+            <div class="title"> Available Days</div>
+            <div class="dialog-close-icon" (click)="hideTouristDisplay()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="wrapper">
+            <div class="nondraggable-container selectable">
+                <div class='container'>
+                    <table>
+                        <tr class="editable-table-titles">
+                            <th class="trip-name"> Name </th>
+                            <th class="trip-description">Email</th>
+                            <th class="trip-name"> Phone </th>
+                            <th class="trip-tourists">Image</th>
+                        </tr>
+                        <tr *ngFor="let tourist of currentTouristArr">
+                            <td class="trip-name"> {{ tourist.firstName + tourist.lastName }} </td>
+                            <td class="trip-description">{{ tourist.email }}</td>
+                            <td class="trip-description">{{ tourist.phoneNumber}} </td>
+                            <td class="trip-startDate">{{ tourist.imageUrl }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </p-dialog>
+    <p-growl [value]="msgs"></p-growl>
+</div>

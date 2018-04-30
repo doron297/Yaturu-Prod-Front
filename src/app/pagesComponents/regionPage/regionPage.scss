@@ -1,0 +1,36 @@
+@import '../../../style/variables.scss';
+@import '../../../style/mixins.scss';
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+
+
+.region-page{
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+
+  .preview-img{
+        min-height: 300px;
+        img{
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            max-height: 350px;
+            max-width: 500px;
+        }
+    }
+    .loader{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 75vh;
+    }
+
+}
+@include contain_progress();
+

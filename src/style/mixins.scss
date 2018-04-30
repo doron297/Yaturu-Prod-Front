@@ -1,0 +1,175 @@
+// global mixins
+@mixin inputSelect(){
+    color:$inputTextColor;
+    background-color: $inputBackgroundColor;
+    border-color:$inputBorderColor;
+    padding: 5px;
+    padding-right: 20px;
+    font-size: 0.8em;
+}
+@mixin inputSearch(){
+    font-size: 0.8em;
+    color:$inputTextColor;
+    background-color: $inputBackgroundColor;
+    border:solid 1px $inputBorderColor;
+    border-radius: 50px;
+    padding: 6px;
+    padding-left: 15px;
+    &:focus{
+        border-radius: 50px;
+        outline: none;
+    }
+}
+
+@mixin leftIconButton(){
+  .left-icon-button{
+    display: flex;
+    align-items: center;
+    font-size: 0.8em;
+    font-weight: 600;
+    color:$highlightColor;
+    cursor: pointer;
+    .button-icon{
+      cursor: pointer;
+      margin-right: 15px;
+      color: $highlightColor;
+    }
+  }
+}
+
+
+@mixin contain_progress{
+  display:flex;
+  justify-content: center;
+  .removeButton {
+    margin-bottom: 10px;
+  }
+  .progress_bar{
+
+      width: 80%;
+      background-color: #ebebeb;
+      height: 30px;
+      border-radius: 5px;
+      margin-top: 15px;
+      border: 0.5px solid grey;
+
+      .bar{
+        background-color: #149bdf;
+        height: 30px;
+        border-radius: 5px;
+        width: 0%;
+      }
+  }
+}
+@mixin squareButton(){
+  .square-button{
+    text-transform: uppercase;
+    padding: 10px;
+    background-color: $squareButtonColor;
+    color:$squareButtonTextColor;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+
+    &:hover{
+      background-color:lighten($squareButtonColor,5);
+    }
+  }
+}
+
+@mixin inputMaterial(){
+  .material-input{ 
+   .group{ 
+    position:relative; 
+    margin-bottom:45px; 
+  }
+  
+  input 				{
+    font-size:18px;
+    padding:10px 10px 10px 5px;
+    display:block;
+    border:none;
+    border-bottom:1px solid #757575;
+  }
+  input:focus 		{ outline:none; }
+
+  label 				 {
+    color:#999; 
+    font-size:16px;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:5px;
+    top:10px;
+    transition:0.2s ease all; 
+    -moz-transition:0.2s ease all; 
+    -webkit-transition:0.2s ease all;
+  }
+
+  input:focus ~ label, input:valid ~ label 		{
+    top:-20px;
+    font-size:14px;
+    color:$inputHilightColor;
+  }
+
+  .bar 	{
+     position:relative;
+     display:block;
+   }
+  .bar:before, .bar:after 	{
+    content:'';
+    height:2px; 
+    width:0;
+    bottom:1px; 
+    position:absolute;
+    background:$inputHilightColor; 
+    transition:0.2s ease all; 
+    -moz-transition:0.2s ease all; 
+    -webkit-transition:0.2s ease all;
+  }
+  .bar:before {
+    left:50%;
+  }
+  .bar:after {
+    right:50%; 
+  }
+  input:focus ~ .bar:before, input:focus ~ .bar:after {
+    width:50%;
+  }
+  .highlight {
+    position:absolute;
+    height:60%; 
+    width:100px; 
+    top:25%; 
+    left:0;
+    pointer-events:none;
+    opacity:0.5;
+  }
+
+  /* active state */
+  input:focus ~ .highlight {
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+  }
+
+  /* ANIMATIONS ================ */
+  @-webkit-keyframes inputHighlighter {
+    from { background:$inputHilightColor; }
+    to 	{ width:0; background:transparent; }
+  }
+  @-moz-keyframes inputHighlighter {
+    from { background:$inputHilightColor; }
+    to 	{ width:0; background:transparent; }
+  }
+  @keyframes inputHighlighter {
+    from { background:$inputHilightColor; }
+    to 	{ width:0; background:transparent; }
+  }
+
+  }
+  
+}

@@ -1,0 +1,182 @@
+<div class="content-page">
+    <div class="wrap-content">
+        <div class="page-header">
+            <div class="page-title"> the content of  - {{editableSiteContent.name}}</div>
+            <div class="page-info">
+            </div>
+        </div>
+        <div class="page-content-toUpdate">
+            <div class="editable-table content-table">
+                <table>
+                    <tr class="editable-table-titles">
+                        <th class="content-name"> name </th>
+                        <th class="content-contentType">contentType</th>
+                        <th class="content-duration">duration</th>
+                        <th class="content-preview">Preview</th>
+                        <th class="content-remove">Remove</th>
+                    </tr>
+                    <tr *ngFor="let item of editableSiteContent.contents" class="editable-row content">
+                        <td class="content-name"> {{item.name}} </td>
+                        <td class="content-contentType">{{item.contentType}}</td>
+                        <td class="content-duration">{{item.duration | duration }} </td>
+                        <td class="content-preview" >
+                            <img *ngIf="item.contentType == 'image' || item.contentType == 'cupon' || item.contentType == 'video'" class="button-td" src="{{item.thumbnailUrl}}" alt="Smiley face" height="42" width="42" (click)="viewContent(item)">
+                            <i *ngIf="item.contentType == 'audio'" class="fa fa-file-audio-o button-td" aria-hidden="true" (click)="viewContent(item)"></i>
+                            <div *ngIf="item.contentType == 'question'" (click)="viewQuestion(item)" class="button-td">View Question</div>
+                            <div *ngIf="item.contentType == 'text'" (click)="viewContent(item)" class="button-td">View Text</div>
+                        </td>
+                        <td class="content-remove"><i class="fa fa-minus" aria-hidden="true" (click)="removeFromSite(item)"></i></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="content-divider"></div>
+    <div class="wrap-content add-border">
+        <div class="page-header">
+            <div class="page-title"> choose content for site</div>
+            <div class="page-info">
+            </div>
+        </div>
+        <div class="page-controls">
+            <div class="page-controls-filters">
+                <input [(ngModel)]="contentFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">
+            </div>
+        </div>
+        <div class="page-content-toSelect">
+            <div class="editable-table content-table">
+                <table>
+                    <tr class="editable-table-titles">
+                        <th class="content-name"> name </th>
+                        <th class="content-contentType">contentType</th>
+                        <th class="content-duration">duration</th>
+                        <th class="content-preview">Preview</th>
+                        <th class="content-add">Add</th>
+                    </tr>
+                    <tr *ngFor="let item of content | async | excludeContent: editableSiteContent?.contentKeys "  class="editable-row content">
+                            <td class="content-name" > {{item.name}} </td>
+                            <td class="content-contentType">{{item.contentType}}</td>
+                            <td class="content-duration">{{item.duration | duration }} </td>
+                            <td class="content-preview" >
+                                <img *ngIf="item.contentType == 'image' || item.contentType == 'cupon' || item.contentType == 'video'" class="button-td" src="{{item.thumbnailUrl}}" alt="Smiley face" height="42" width="42" (click)="viewContent(item)">
+                                <i *ngIf="item.contentType == 'audio'" class="fa fa-file-audio-o button-td" aria-hidden="true" (click)="viewContent(item)"></i>
+                                <div *ngIf="item.contentType == 'question'" (click)="viewQuestion(item)" class="button-td">View Question</div>
+                                <div *ngIf="item.contentType == 'text'" (click)="viewContent(item)" class="button-td">View Text</div>
+                            </td>
+                            <td class="content-add"><i class="fa fa-plus" aria-hidden="true" (click)="addToSite(item)"></i></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="content-divider no-bottom"></div>
+    <div class="button-td save-site" (click)="saveSiteContent()"> Save Site's Content</div>
+       <p-dialog class="dialog-container" [(visible)]="lightboxVisible" [closable]="false" modal="modal" showEffect="fade" [resizable]="false" [draggable]="false">
+        <header class="dialog-header">
+                <div class="title"> Content Preview </div>
+                <div class="dialog-close-icon" (click)="hidePreviewDialog()">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+            </header>
+        <div class="dialog-content-preview">
+            <div *ngIf="editableContent.contentType == 'image' || editableContent.contentType == 'cupon' ">
+                <div class="preview-img">
+                    <img src="{{editableContent.url}}" >
+                </div>
+            </div>
+            <div *ngIf="editableContent.contentType == 'audio' ">
+                <audio controls>
+                    <source src="{{editableContent.url}}" type="audio/mpeg">
+                </audio>
+            </div>
+            <div *ngIf="editableContent.contentType == 'video' ">
+                <div style="height:315px;" >
+                    <video width="560" height="315" frameborder="0" controls autoplay>
+                        <source src="{{editableContent.url}}" >
+                    </video>
+                </div>
+            </div>
+            <div *ngIf="editableContent.contentType == 'text' ">
+                {{editableContent.description}}
+            </div>
+        </div>
+    </p-dialog>
+    
+    <p-dialog  class="dialog-container" [(visible)]="questionBoxVisible" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+            <header class="dialog-header">
+            <div *ngIf='titleSwitchQuestion' class="title"> Add Question</div>
+            <div *ngIf='!titleSwitchQuestion' class="title"> Edit Question</div>
+                <div class="dialog-close-icon" (click)="hideQuestion()">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+            </header>
+            <div class="dialog-content">
+                <div class="material-input">
+                    <div class="group">
+                        <input  *ngIf="editableContent.question" type="text" [(ngModel)]="editableContent.name" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Question</label>
+                    </div>
+                </div>
+                <br/>
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.duration" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Duration</label>
+                    </div>
+                </div>
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[0]" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Answer1</label>
+                    </div>
+                </div>
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[1]" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Answer2</label>
+                    </div>
+                </div>
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[2]" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Answer3</label>
+                    </div>
+                </div>
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.answers[4]" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Answer4</label>
+                    </div>
+                </div>
+                <div class="material-input">
+                    <div class="group">
+                        <input type="text" *ngIf="editableContent.question" [(ngModel)]="editableContent.question.correctAnswer" required>
+                        <input type="text" *ngIf="!editableContent.question" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Right Answer</label>
+                    </div>
+                </div>
+            </div>
+    </p-dialog>
+    <p-growl [value]="msgs"></p-growl>
+</div>

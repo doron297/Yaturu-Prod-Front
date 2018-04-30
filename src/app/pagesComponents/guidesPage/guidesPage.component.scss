@@ -1,0 +1,57 @@
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+.guides-page {
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+  .contain-upload {
+    width: 100%;
+    text-align: left;
+  }
+  .preview-img {
+    img {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      max-height: 350px;
+      max-width: 500px;
+    }
+    min-height: 300px;
+  }
+}
+
+@include contain_progress();
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+}
+
+.reset{
+  width: 124px;
+  font-size: 11px;
+  margin: 9px;
+  color: #149bdf;
+  background-color: #ffffff;
+  border: 1px solid #149bdf;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  align-items: end;
+  margin-top: 25px;
+  padding: 15px;
+}

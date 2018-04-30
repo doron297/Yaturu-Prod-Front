@@ -1,0 +1,55 @@
+@import '../pages.scss';
+@import '../editableTable.scss';
+@import '../dialog.scss';
+
+.content-page{
+  @include pageLayout();
+  @include pageControls();
+  @include leftIconButton();
+  @include squareButton();
+  @include inputMaterial();
+  @include editableTable();
+  @include dialog();
+  .text-div{
+    text-align: left;
+  }
+  .content-counter{
+    display: inline;
+    font-weight: 800;
+    padding-left: 20px;
+  }
+}
+.content-preview{
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    i {
+      font-size: 20px;
+    }
+}
+.loader{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+}
+@include contain_progress();
+.preview-img{
+  img{
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      max-height: 350px;
+      max-width: 500px;
+  }
+}
+.dialog-content-preview{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+.label{
+  margin-top: 20px;
+}

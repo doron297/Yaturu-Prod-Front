@@ -1,0 +1,58 @@
+@import '../../style/variables.scss';
+@import '../../style/mixins.scss';
+
+$pageBackgroundColor:#ffffff;
+$pageTopBorderColor: lighten($highlightColor,20) ;
+$pageHeaderBottomBorderColor: $inputBorderColor;
+@mixin pageLocation(){
+    margin: 20px;
+}
+@mixin pageControls(){
+    .page-controls{
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+    }
+  .page-controls-filters{
+    .select-sort,.select-filter{
+      @include inputSelect();
+      margin-left: 10px;
+    }
+    .page-controls-search{
+      @include inputSearch();
+      margin-left: 10px;
+    }
+  }
+}
+
+@mixin pageLayout(){
+    @include pageLocation();
+    background-color:$pageBackgroundColor;
+    border-top:solid 3px $pageTopBorderColor;
+    .page-header{
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        border-bottom: solid 1px $pageHeaderBottomBorderColor;
+        user-select: none;
+        .page-info,.page-title{
+            padding: 10px;
+        }
+        .page-title{
+            padding-left: 25px;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .page-info{
+            font-size: 0.8em;
+            padding-right: 25px;
+        }
+    }
+    .page-content{
+        padding-top: 10px;
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-bottom: 10px;
+    }
+}

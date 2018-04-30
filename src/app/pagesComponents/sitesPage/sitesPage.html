@@ -1,0 +1,111 @@
+<div  class="sites-page">
+    <div class="page-header">
+        <div class="page-title"> Sites </div>
+        <div class="page-info"> {{sites.ength}} </div>
+    </div>
+    <div class="page-content" *ngIf="!loaderOn">
+        <div class="page-controls">
+            <div (click)="addSite()" class="left-icon-button">
+                <div class="button-icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <p> Add Site </p>
+            </div>
+            <div class="page-controls-filters">
+                <input [(ngModel)]="siteFilter" (ngModelChange)="filterUpdate()" type="text" class="page-controls-search">
+            </div>
+        </div>
+        <div class="editable-table sites-table">
+            <table>
+                <tr class="editable-table-titles">
+                    <th class="edit-header"></th>
+                    <th class="site-name"> Name </th>
+                    <th class="site-region">Region</th>
+                    <th class="site-description">Description</th>
+                    <th class="site-content">Content</th>
+                    <th class="site-image">Image</th>
+                </tr>
+                <tr *ngFor="let site of sites | async" class="editable-row site">
+                    <td class="site-edit" (click)="editSite(site)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" pTooltip="Edit" tooltipPosition="bottom"></i>
+                    </td>
+                    <td class="site-name"> {{site.name}} </td>
+                    <td class="site-region">{{getRegionName(site.regionKey)}}</td>
+                    <td class="site-description">{{site.description}}</td>
+                    <td class="site-content">
+                        <div class="button-td"  [routerLink]="['/content/' + site.key]">
+                            {{ site.contentKeys ? site.contentKeys.length : 0 }}
+                        </div>
+                    </td>
+                    <td class="site-image">
+                        <img src="{{site.imageUrl}}" class="button-td" alt="Smiley face" height="42" width="42" (click)="previewImage(site)">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="loader" *ngIf="loaderOn">
+        <loader-component ></loader-component>
+    </div>
+    <p-dialog class="dialog-container" [(visible)]="dialogVisable" [closable]="false" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <header class="dialog-header">
+            <div *ngIf='titleSwitch' class="title"> Add Site</div>
+            <div *ngIf='!titleSwitch' class="title"> Edit Site</div>
+            <div class="dialog-close-icon" (click)="hideDialog()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </header>
+        <div class="dialog-content">
+            <div class="region-input">
+                Add Region
+                <p-dropdown [options]="availableRegions" [(ngModel)]="editableSite.regionKey" [style]="{'width':'180px'}"></p-dropdown>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableSite.name" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Site name</label>
+                </div>
+            </div>
+            <div class="material-input">
+                <div class="group">
+                    <input type="text" [(ngModel)]="editableSite.imageUrl" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Site Image Url</label>
+                </div>
+            </div>
+            <div class="content-selection-input">
+                <form [hidden]='!showUpload' class="upload_form">
+                </form>
+
+                <div *ngIf="!showUpload">
+                    <button *ngIf="!uploadDone" class="cancelButton" (click)="cancelUploadfunction()"> Cancel Upload</button>
+                    <button *ngIf="uploadDone" class="removeButton" (click)="removeUploadfunction()" style="disabled:disabled;"> Remove Upload </button>
+                    <div class="contain_progress">
+                        <div class="progress_bar" style="width:100%">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-textarea">
+                <h5>Description</h5>
+                <textarea [(ngModel)]="editableSite.description" placeholder="Description"></textarea>
+            </div>
+        </div>
+        <footer>
+            <div class="square-button" (click)="removeSite()">Delete</div>
+            <div class="square-button" (click)="saveSite()">save</div>
+        </footer>
+    </p-dialog>
+    <p-dialog class="dialog-container" [(visible)]="imagePreviewVisible" [closable]="true" modal="modal" showEffect="fade" [resizable]="false"
+        [draggable]="false">
+        <div class="preview-img">
+            <img src="{{editableSite.imageUrl}}">
+        </div>
+    </p-dialog> 
+</div>
+<p-growl [value]="msgs"></p-growl>
